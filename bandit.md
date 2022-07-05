@@ -41,3 +41,15 @@ $ cat .hidden
 ```
 ### Contraseña encontrada
 * pIwrPrtPN36QITSp3EQaw936yaFoFgAB
+
+## Nivel 4-5
+Contraseña encontrada en **inhere**, al entrar se ce muchos archivos que no muetran que son, para eso se usa **file**
+
+```
+$ ls -la
+$ file ./inhere/* //mostrara los archivos
+$ cat ./inhere/-file07
+```
+![](https://github.com/LordIosep/Linux_practice/blob/main/Imagenes/File.PNG)
+### Contraseña encontrada
+* koReBOKuIDDepwhWk7jZC0RTdopnAYKh
