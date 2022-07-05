@@ -93,3 +93,16 @@ $ cat /var/lib/dpkg/info/bandit7.password
 
 ### Contraseña encontrada
 * HKBPTKQnIay4Fw76bEy8PVxKEDQRKTzs
+
+## Nivel 7-8
+En este nivel se encontro la contraseña en p */home/bandit7/.data.txt*, se uso la herramienta de grep que busca patrones en archivos; tambie se puede usar vi para buscar la palabra *millionth* con `/millionth`  
+
+```
+$ ls 
+$  grep millionth data.txt
+ millionth       cvX2JJa4CFALtqS87jk27qwqGhBM9plV
+```
+
+### Contraseña encontrada
+* cvX2JJa4CFALtqS87jk27qwqGhBM9plV
+
