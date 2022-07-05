@@ -55,7 +55,7 @@ $ cat ./inhere/-file07
 ### Contraseña encontrada
 * koReBOKuIDDepwhWk7jZC0RTdopnAYKh
 
-## Nivel 4-5
+## Nivel 5-6
 Contraseña encontrada en *./inhere/maybehere07/.file2*, para este reto se uso el comando **find**.
 
 ```
@@ -74,4 +74,13 @@ Opciones        | Descripción
 `-size 1033c`   | El archivo usa **1033** unidades de espacio. `c` se refiere a **bytes** .                    
 
 ### Contraseña encontrada
-*DXjZPULLxYr17uwoI01bNLQbtFemEgo7
+* DXjZPULLxYr17uwoI01bNLQbtFemEgo7
+
+## Nivel 6-7
+En este nivel se encotro la contraseña en */var/lib/dpkg/info/bandit7.password*, se logro gracias al comando **find**, que sirve para buscar archivos.
+```
+$ find / -user bandit7 -group bandit6 -size 33c  //buscara con el usuario bandit7 con el grupo bandit6 con un tamaño 33 bytes
+$ cat ./inhere/-file07
+```
+
+HKBPTKQnIay4Fw76bEy8PVxKEDQRKTzs
