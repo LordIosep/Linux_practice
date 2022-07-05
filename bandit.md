@@ -31,7 +31,7 @@ $ vi spaces\ in\ this\ filename
 * UmHadQclWmgdLOKQ3YNgjWxGoRMb5luK
 
 ## Nivel 3-4
-Contraseña encontrada en **inhere**, esta es una carpeta oculta, luego se uso cat en **hibben**
+Contraseña encontrada en *./inhere/.hidden*, esta es una carpeta oculta, luego se uso cat en **hibben**
 
 ```
 $ ls -la
@@ -43,7 +43,7 @@ $ cat .hidden
 * pIwrPrtPN36QITSp3EQaw936yaFoFgAB
 
 ## Nivel 4-5
-Contraseña encontrada en **inhere**, al entrar se ce muchos archivos que no muetran que son, para eso se usa **file**
+Contraseña encontrada en *./inhere*, al entrar se ve muchos archivos que no muetran que son, para eso se usa **file**
 
 ```
 $ ls -la
@@ -51,5 +51,26 @@ $ file ./inhere/* //mostrara los archivos
 $ cat ./inhere/-file07
 ```
 ![](https://github.com/LordIosep/Linux_practice/blob/main/Imagenes/File.PNG)
+
 ### Contraseña encontrada
 * koReBOKuIDDepwhWk7jZC0RTdopnAYKh
+
+## Nivel 4-5
+Contraseña encontrada en *./inhere/maybehere07/.file2*, para este reto se uso el comando **find**.
+
+```
+$ ls -la
+$ find . -type f -readable ! -executable -size 1033c
+$ cat ./inhere/-file07
+```
+* Flags Find
+| Opciones        | Descripción                                                                                  |
+| --------------- | -------------------------------------------------------------------------------------------- |
+| `. O ./ `       | Consulte el directorio de trabajo actual                                                     |
+| `-type f`       | Coincidan con archivos que son **legibles**.                                                 |
+| `-executable`   | Coincidan con los archivos que son **directorios ejecutables  &  que se pueden buscar**      |
+| `! -executable` | Coincidan con archivos que **NO** son ejecutables & directorios que **NO** se pueden buscar  |
+| `-size 1033c`   | El archivo usa **1033** unidades de espacio. `c` se refiere a **bytes** .                            |
+
+### Contraseña encontrada
+*DXjZPULLxYr17uwoI01bNLQbtFemEgo7
