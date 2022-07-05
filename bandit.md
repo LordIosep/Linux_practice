@@ -132,7 +132,7 @@ Z)========== is
 * truKLdjsbJ5g7yyJ2X2R0o3a5HQJFuLk
 
 ## Nivel 10-11
-En este En este nivel se encontro la contraseña en `/home/bandit7/.data.txt`, primero se uso el comando `cat` para ver que tenia el archivo y como no se entendia nada, se uso `base64` para decodificar `data.txt`.
+En este nivel se encontro la contraseña en `/home/bandit7/.data.txt`, primero se uso el comando `cat` para ver que tenia el archivo y como no se entendia nada, se uso `base64` para decodificar `data.txt`.
 ```
 $ ls 
  data.txt
