@@ -31,7 +31,7 @@ $ vi spaces\ in\ this\ filename
 * UmHadQclWmgdLOKQ3YNgjWxGoRMb5luK
 
 ## Nivel 3-4
-Contraseña encontrada en spaces in this filename, use cat
+Contraseña encontrada en **inhere**, esta es una carpeta oculta, luego se uso cat en **hibben**
 
 ```
 $ ls -la
