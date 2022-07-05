@@ -95,7 +95,7 @@ $ cat /var/lib/dpkg/info/bandit7.password
 * HKBPTKQnIay4Fw76bEy8PVxKEDQRKTzs
 
 ## Nivel 7-8
-En este nivel se encontro la contraseña en p */home/bandit7/.data.txt*, se uso la herramienta de grep que busca patrones en archivos; tambie se puede usar vi para buscar la palabra *millionth* con `/millionth`  
+En este nivel se encontro la contraseña en `/home/bandit7/.data.txt`, se uso la herramienta de grep que busca patrones en archivos; tambie se puede usar vi para buscar la palabra *millionth* con `/millionth`  
 
 ```
 $ ls 
@@ -106,3 +106,40 @@ $  grep millionth data.txt
 ### Contraseña encontrada
 * cvX2JJa4CFALtqS87jk27qwqGhBM9plV
 
+## Nivel 8-9
+En este nivel se encontro la contraseña en `/home/bandit7/.data.txt`, se uso dos comandos cat y sort para encotrar la contraseña que esta debntro del archivo txt.
+```
+$ ls 
+ data.txt
+$  cat data.txt | sort | uniq -u // o tambien sort data.txt | uniq -u
+```
+
+### Contraseña encontrada
+* UsvVyFSfZZWbi6wgC7dAFyFuR6jQQUhR
+
+## Nivel 9-10
+En este nivel se encontro la contraseña en `/home/bandit7/.data.txt`, primero se uso el comando `string` para distingir cadenas legibles por humanos en `data.txt`, luego se usa un pipe con el comando grep para buscar dentro del archiovo.
+```
+$ ls 
+ data.txt
+$  strings data.txt | grep ===
+========== the*2i"4
+========== password
+Z)========== is
+&========== truKLdjsbJ5g7yyJ2X2R0o3a5HQJFuLk
+```
+### Contraseña encontrada
+* truKLdjsbJ5g7yyJ2X2R0o3a5HQJFuLk
+
+## Nivel 10-11
+En este En este nivel se encontro la contraseña en `/home/bandit7/.data.txt`, primero se uso el comando `cat` para ver que tenia el archivo y como no se entendia nada, se uso `base64` para decodificar `data.txt`.
+```
+$ ls 
+ data.txt
+$cat data.txt
+ VGhlIHBhc3N3b3JkIGlzIElGdWt3S0dzRlc4TU9xM0lSRnFyeEUxaHhUTkViVVBSCg==
+$  base64 -d data.txt // -d tag para decodificar
+ The password is IFukwKGsFW8MOq3IRFqrxE1hxTNEbUPR
+```
+### Contraseña encontrada
+* IFukwKGsFW8MOq3IRFqrxE1hxTNEbUPR
