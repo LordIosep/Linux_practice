@@ -64,13 +64,13 @@ $ find . -type f -readable ! -executable -size 1033c
 $ cat ./inhere/-file07
 ```
 * Flags Find
-| Opciones        | Descripción                                                                                  |
-| --------------- | -------------------------------------------------------------------------------------------- |
-| `. O ./ `       | Consulte el directorio de trabajo actual                                                     |
-| `-type f`       | Coincidan con archivos que son **legibles**.                                                 |
-| `-executable`   | Coincidan con los archivos que son **directorios ejecutables  &  que se pueden buscar**      |
-| `! -executable` | Coincidan con archivos que **NO** son ejecutables & directorios que **NO** se pueden buscar  |
-| `-size 1033c`   | El archivo usa **1033** unidades de espacio. `c` se refiere a **bytes** .                            |
+Opciones        | Descripción                                                                                  
+--------------- | -------------------------------------------------------------------------------------------- 
+`. O ./ `       | Consulte el directorio de trabajo actual                                                     
+`-type f`       | Coincidan con archivos que son **legibles**.                                                 
+`-executable`   | Coincidan con los archivos que son **directorios ejecutables  &  que se pueden buscar**      
+`! -executable` | Coincidan con archivos que **NO** son ejecutables & directorios que **NO** se pueden buscar  
+`-size 1033c`   | El archivo usa **1033** unidades de espacio. `c` se refiere a **bytes** .                    
 
 ### Contraseña encontrada
 *DXjZPULLxYr17uwoI01bNLQbtFemEgo7
