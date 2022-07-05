@@ -82,5 +82,7 @@ En este nivel se encotro la contraseña en */var/lib/dpkg/info/bandit7.password*
 $ find / -user bandit7 -group bandit6 -size 33c  //buscara con el usuario bandit7 con el grupo bandit6 con un tamaño 33 bytes
 $ cat ./inhere/-file07
 ```
+![](https://github.com/LordIosep/Linux_practice/blob/main/Imagenes/Bandit6.PNG)
 
-HKBPTKQnIay4Fw76bEy8PVxKEDQRKTzs
+### Contraseña encontrada
+* HKBPTKQnIay4Fw76bEy8PVxKEDQRKTzs
