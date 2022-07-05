@@ -64,8 +64,9 @@ $ find . -type f -readable ! -executable -size 1033c
 $ cat ./inhere/-file07
 ```
 * Flags Find
+
 Opciones        | Descripción                                                                                  
---------------- | -------------------------------------------------------------------------------------------- 
+--------------- | ----------------------------------------------------------------------------------------
 `. O ./ `       | Consulte el directorio de trabajo actual                                                     
 `-type f`       | Coincidan con archivos que son **legibles**.                                                 
 `-executable`   | Coincidan con los archivos que son **directorios ejecutables  &  que se pueden buscar**      
