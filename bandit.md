@@ -229,7 +229,7 @@ bandit7@bandit:~$ vi data.txt
 
 En este editor buscamos la palabra `millionth` con `/`
 
-https://github.com/LordIosep/Linux_practice/blob/main/Imagenes/vi.PNG
+![](https://github.com/LordIosep/Linux_practice/blob/main/Imagenes/vi.PNG)
 ### Contraseña encontrada
 * cvX2JJa4CFALtqS87jk27qwqGhBM9plV
 
