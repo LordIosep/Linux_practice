@@ -220,7 +220,7 @@ millionth cvX2JJa4CFALtqS87jk27qwqGhBM9plV
 bandit7@bandit:~$ cat data.txt | grep "millionth”
 millionth cvX2JJa4CFALtqS87jk27qwqGhBM9plV
 ```
-**Solución Extra**
+## **Solución Extra**
 
 Tambien se puede utilizar el comando `vi` que es un editor de texto de linux.
 ```
@@ -230,30 +230,69 @@ bandit7@bandit:~$ vi data.txt
 En este editor buscamos la palabra `millionth` con `/`
 
 ![](https://github.com/LordIosep/Linux_practice/blob/main/Imagenes/vi.PNG)
+
 ### Contraseña encontrada
 * cvX2JJa4CFALtqS87jk27qwqGhBM9plV
 
 ## Nivel 8-9
-En este nivel se encontro la contraseña en `/home/bandit8/.data.txt`, se uso dos comandos cat y sort para encotrar la contraseña que esta debntro del archivo txt.
+### Tarea
+La contraseña para el siguiente nivel se almacena en el archivo `data.txt` y es la única línea de texto que aparece una sola vez.
+### Solución
+Para encontrar la línea que aparece solo una vez en el archivo, primero ordenamos las líneas y luego filtramos por la única, para eso usamos el comando `sort` luego (`|`) con `uniq`.
+
+`uniq` es un comando que filtra la entrada y escribe en la salida. En concreto, filtra en función de líneas idénticas. Tiene una bandera -u, que filtra por líneas únicas (líneas que aparecen solo unas).
+
+`sort` ordena las líneas de un archivo de texto. Además, tiene banderas para ordenar en reversa (`-r`) y ordenar numéricamente (`-n`).
 ```
-$ ls 
- data.txt
-$  cat data.txt | sort | uniq -u // o tambien sort data.txt | uniq -u
+bandit8@bandit:~$ ls 
+data.txt
+bandit8@bandit:~$  cat data.txt | sort | uniq -u
+UsvVyFSfZZWbi6wgC7dAFyFuR6jQQUhR
+```
+Tambien se puede usar
+```
+bandit8@bandit:~$ sort data.txt | uniq -u
+UsvVyFSfZZWbi6wgC7dAFyFuR6jQQUhR
 ```
 
 ### Contraseña encontrada
 * UsvVyFSfZZWbi6wgC7dAFyFuR6jQQUhR
 
 ## Nivel 9-10
-En este nivel se encontro la contraseña en `/home/bandit9/.data.txt`, primero se uso el comando `string` para distingir cadenas legibles por humanos en `data.txt`, luego se usa un pipe con el comando grep para buscar dentro del archiovo.
+### Tarea
+La contraseña para el siguiente nivel se almacena en el archivo `data.txt` en una de las pocas cadenas legibles por humanos, precedida por varios caracteres `=`.
+### Solución
+
+Primero, debemos distinguir las cadenas legibles por humanos en 'data.txt'. Usamos el comando `strings`.
+Segundo, Dado que la contraseña está precedida por varios caracteres '=', podemos usar la expresión regular, pasando `grep -E` PATTERN opciones. 
+
 ```
-$ ls 
- data.txt
-$  strings data.txt | grep ===
+bandit9@bandit:~$  ls 
+data.txt
+bandit9@bandit:~$ file data.txt
+data.txt: data
+bandit9@bandit:~$ strings data.txt | grep ===
 ========== the*2i"4
 ========== password
 Z)========== is
 &========== truKLdjsbJ5g7yyJ2X2R0o3a5HQJFuLk
+```
+
+Tambien se puede hacer de esta manera
+
+```
+bandit9@bandit:~$ strings data.txt | grep -E "=+"
+========== the*2i"4
+=:G e
+========== password
+<I=zsGi
+Z)========== is
+A=|t&E
+Zdb=
+c^ LAh=3G
+*SF=s
+&========== truKLdjsbJ5g7yyJ2X2R0o3a5HQJFuLk
+S=A.H&^
 ```
 ### Contraseña encontrada
 * truKLdjsbJ5g7yyJ2X2R0o3a5HQJFuLk
