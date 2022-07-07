@@ -434,8 +434,6 @@ P▒^data2.bin=▒▒BZh91AY&SY▒O▒▒▒▒ڞOv▒▒▒}?▒▒}▒▒^▒�
 ### Parte 2 **Descomprimir repetidamente**
 Podemos ver que el archivo se comprimió con qzip, por lo que podemos descomprimir los datos con el comando `gunzip`. Al intentar descomprimir un archivo gzip, es importante que el archivo tenga la extensión correcta. Gunzip es una abreviatura de comando `gzip -d`
 ```
-```
-```
 bandit12@bandit:/tmp/random_dir$ mv binario binario.gz
 bandit12@bandit:/tmp/random_dir$ ls
 binario.gz datos
@@ -448,4 +446,60 @@ Sin embargo, los datos aún no están completamente descomprimidos, por lo que v
 bandit12@bandit:/tmp/random_dir$ file binario
 binario: bzip2 compressed data, block size = 900k
 ```
-Se puede observar que el archivo ahora se encuentra en formato `bzip2`, entonces usamos el comando ``bzip2 -d`
+Se puede observar que el archivo ahora se encuentra en formato `bzip2`, entonces usamos el comando ``bzip2 -d` para descomprimir
+```
+bandit12@bandit:/tmp/random_dir$ mv binario binario.bz2
+bandit12@bandit:/tmp/random_dir$ ls
+binario.bz2  datos
+bandit12@bandit:/tmp/random_dir$ bzip2 -d binario.bz2
+bandit12@bandit:/tmp/random_dir$ ls
+binario  binary  data  datos
+```
+Usando el comando `file` podemos ver que clase de archivo es
+
+```
+bandit12@bandit:/tmp/random_dir$ file binario
+binario: gzip compressed data, was "data4.bin", last modified: Thu May  7 18:14:30 2020, max compression, from Unix
+```
+Parece que ahora tenemos un archivo. Entonces usamos `tar` para extraer el archivo:
+```
+bandit12@bandit:/tmp/random_dir$ mv binario binario.tar
+bandit12@bandit:/tmp/random_dir$ ls
+binario.tar datos
+bandit12@bandit:/tmp/random_dir$ tar -xf binario.tar ; ls
+binario.tar  data5.bin  datos
+```
+Volvemos a analizar el archivo con el comando `file` y usando `cat binario.tar o binario.tar | head` ('head' para obtener solo las primeras 10 líneas), podemos ver la cadena 'data5.bin', que es un nombre de archivo.
+```
+bandit12@bandit:/tmp/random_dir$ file data5.bin
+data5.bin: POSIX tar archive (GNU)
+bandit12@bandit:/tmp/random_dir$ cat data5.bin | head
+data6.bin0000644000000000000000000000033613655050006011247 0ustar  rootrootBZh91AY&SY
+                                                                                    +
+                                                                                     ▒▒▒Y▒A▒▒z▒<jA▒▒j▒u▒  ▒
+            ▒@ѣ ▒▒!▒hiM▒
+ ▒▒▒BȨ$fz&1*▒Ԇf▒▒zG▒g}▒+▒Q▒P(f}▒▒@Թ▒▒▒▒▒Tj▒1▒P▒EƮ▒▒ߨ▒▒▒@Ț▒▒=▒s▒▒*▒▒▒As*Y▒▒!$r▒▒5▒▒▒Es▒]▒▒B@ 0▒,
+```
+Y se puede observar que hay otro archivo llamado `data6.bin`. Así que extraemos el archivo de nuevo.
+```
+bandit12@bandit:/tmp/random_dir$ tar -xf data5.bin
+bandit12@bandit:/tmp/random_dir$ ls
+binario.tar  binary  data  data5.bin  data6.bin  datos
+```
+
+Volvemos a verificar que tipo de arhivo es, con el comando `file`. 
+
+```
+bandit12@bandit:/tmp/random_dir$ file data6.bin
+data6.bin: bzip2 compressed data, block size = 900k
+```
+Es un archivo bzip2 entonces usamos nuevamente el comando `bzip2 -d`
+```
+bandit12@bandit:/tmp/random_dir$ bzip2 -d data6.bin ; ls
+bzip2: Can't guess original name for data6.bin -- using data6.bin.out
+binario.tar  binary  data  data5.bin  data6.bin.out  datos
+```
+
+
+
+
