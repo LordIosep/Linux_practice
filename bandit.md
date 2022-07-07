@@ -210,22 +210,26 @@ bandit7@bandit:~$ du -b data.txt
 Por lo tanto, simplemente revisar el archivo llevaría demasiado tiempo y sería demasiado esfuerzo.
 
 En su lugar, podemos intentar usar `grep`, ya que la contraseña está en la misma línea que la palabra `millionth`.
-**Solución: 1**
+**Solución 1:**
 ```
 bandit7@bandit:~$ grep "millionth" data.txt OR grep -w "millionth"
 millionth cvX2JJa4CFALtqS87jk27qwqGhBM9plV              
 ```
-**Solución: 2**
+**Solución 2:**
 ```
 bandit7@bandit:~$ cat data.txt | grep "millionth”
 millionth cvX2JJa4CFALtqS87jk27qwqGhBM9plV
 ```
 **Solución Extra**
+
 Tambien se puede utilizar el comando `vi` que es un editor de texto de linux.
 ```
 bandit7@bandit:~$ vi data.txt
 ```
+
 En este editor buscamos la palabra `millionth` con `/`
+
+https://github.com/LordIosep/Linux_practice/blob/main/Imagenes/vi.PNG
 ### Contraseña encontrada
 * cvX2JJa4CFALtqS87jk27qwqGhBM9plV
 
