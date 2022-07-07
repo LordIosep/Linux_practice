@@ -298,25 +298,49 @@ S=A.H&^
 * truKLdjsbJ5g7yyJ2X2R0o3a5HQJFuLk
 
 ## Nivel 10-11
-En este nivel se encontro la contraseña en `/home/bandit10/.data.txt`, primero se uso el comando `cat` para ver que tenia el archivo y como no se entendia nada, se uso `base64` para decodificar `data.txt`.
+### Tarea
+La contraseña para el siguiente nivel se almacena en el archivo `data.txt`, que contiene datos codificados en base64.
+### Solución
+Para esta tarea se desea encontrar la contraseña que esta en el archivo `data.txt` que este se encuentra en un formato base64 es por eso que se usara el comando `base64` que permite codificar y decodificar. Para decodificar, necesitamos usar la bandera  o flasg `-d`. 
 ```
-$ ls 
- data.txt
-$cat data.txt
- VGhlIHBhc3N3b3JkIGlzIElGdWt3S0dzRlc4TU9xM0lSRnFyeEUxaHhUTkViVVBSCg==
-$  base64 -d data.txt // -d tag para decodificar
- The password is IFukwKGsFW8MOq3IRFqrxE1hxTNEbUPR
+bandit10@bandit:~$ ls 
+data.txt
+bandit10@bandit:~$cat data.txt
+VGhlIHBhc3N3b3JkIGlzIElGdWt3S0dzRlc4TU9xM0lSRnFyeEUxaHhUTkViVVBSCg==
+bandit10@bandit:~$ base64 -d data.txt // -d tag para  decodificar
+The password is IFukwKGsFW8MOq3IRFqrxE1hxTNEbUPR
+Tambien se puede usar:
+bandit10@bandit:~$ cat data.txt | base64 — decode
+The password is IFukwKGsFW8MOq3IRFqrxE1hxTNEbUPR
 ```
 ### Contraseña encontrada
 * IFukwKGsFW8MOq3IRFqrxE1hxTNEbUPR
 
 ## Nivel 11-12
-En este nivel se encontro la contraseña en `/home/bandit11/.data.txt`, se uso el comando `cat` con un pipe `tr` para traducir caracteres por otros.
+### Tarea
+La contraseña para el siguiente nivel se almacena en el archivo data.txt , donde todas las letras minúsculas (az) y mayúsculas (AZ) se han rotado 13 posiciones.
 ```
-$ ls 
- data.txt
-$ cat data.txt | tr 'A-Za-z' 'N-ZA-Mn-za-m'
- The password is 5Te8Y4drgCRfCx8ugdwuEX8KFC6k2EUu
+bandit11@bandit:~$  ls 
+data.txt
+bandit11@bandit:~$ cat data.txt
+Gur cnffjbeq vf 5Gr8L4qetPEsPk8htqjhRK8XSP6x2RHh
+```
+Sabemos que los caracteres en los datos están rotados por 13 caracteres. Podemos hacer que los caracteres vuelvan a su orden original usando el comando `tr`. El comando `tr`se utiliza para traducir/transformar datos de un formulario a otro.
+
+En nuestro caso, para decodificar los contenidos en data.txt, el comando a utilizar es ``. Esto significa que para:
+Mayúsculas : Mapa de `A-Z` a `N-ZA-M` 
+Minúsculas : Mapa de `a-z` a `n-za-m`
+
+Como tal, cualquiera de los siguientes comandos generará el `data.txt` contenido decodificado:
+
+* cat data.txt | tr “A-Za-z” “N-ZA-Mn-za-m”
+* cat data.txt | tr “a-zA-Z” “n-za-mN-ZA-M” or
+* cat data.txt | tr “[a-zA-Z]” “[n-za-mN-ZA-M]”
+* cat data.txt | tr “n-za-mN-ZA-M” “a-zA-Z”
+
+```
+bandit11@bandit:~$ cat data.txt | tr 'A-Za-z' 'N-ZA-Mn-za-m'
+The password is 5Te8Y4drgCRfCx8ugdwuEX8KFC6k2EUu
 ```
 ### Contraseña encontrada
 * 5Te8Y4drgCRfCx8ugdwuEX8KFC6k2EUu
