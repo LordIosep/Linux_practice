@@ -146,6 +146,7 @@ $  base64 -d data.txt // -d tag para decodificar
 
 ## Nivel 11-12
 En este nivel se encontro la contraseña en `/home/bandit11/.data.txt`, se uso el comando `cat` con un pipe `tr` para traducir caracteres por otros.
+```
 $ ls 
  data.txt
 $ cat data.txt | tr 'A-Za-z' 'N-ZA-Mn-za-m'
