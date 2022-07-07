@@ -1,12 +1,18 @@
 # Bandit
 ## Nivel 0-1
-Contraseña encontrada en readme, abri el archivo con vi
-
+### Tarea
+La contraseña para el siguiente nivel se almacena en un archivo llamado `Readme` ubicado en el directorio de inicio.
+### Solución 
+En el mismo directorio donde nos encontramos podemos realizar un `ls` para ver que el archivo se encuentre ahi.
 ```
-$ ls -la
-$ vi readme
+$ bandit0@bandit:~$ ls -l
+$ readme
 ```
-Para ver el contenido de estos archivos se puede usar cat, vi, nano y vim
+Como se puede observar esta el archivo readme entonces para ver el contenido de este archivo podemos usar estos comandos: cat, nano y vi 
+```
+$bandit0@bandit:~$ cat readme
+$ boJ9jbbUNNfktd78OOpsqOltutMc3MY1
+```
 ### Contraseña encontrada
 * boJ9jbbUNNfktd78OOpsqOltutMc3MY1
 
