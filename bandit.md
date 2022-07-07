@@ -319,14 +319,14 @@ The password is IFukwKGsFW8MOq3IRFqrxE1hxTNEbUPR
 ## Nivel 11-12
 ### Tarea
 La contraseña para el siguiente nivel se almacena en el archivo data.txt , donde todas las letras minúsculas (az) y mayúsculas (AZ) se han rotado 13 posiciones.
+### Solución
+Sabemos que los caracteres en los datos están rotados por 13 caracteres. Podemos hacer que los caracteres vuelvan a su orden original usando el comando `tr`. El comando `tr`se utiliza para traducir/transformar datos de un formulario a otro.
 ```
 bandit11@bandit:~$  ls 
 data.txt
 bandit11@bandit:~$ cat data.txt
 Gur cnffjbeq vf 5Gr8L4qetPEsPk8htqjhRK8XSP6x2RHh
 ```
-Sabemos que los caracteres en los datos están rotados por 13 caracteres. Podemos hacer que los caracteres vuelvan a su orden original usando el comando `tr`. El comando `tr`se utiliza para traducir/transformar datos de un formulario a otro.
-
 En nuestro caso, para decodificar los contenidos en data.txt, el comando a utilizar es ``. Esto significa que para:
 Mayúsculas : Mapa de `A-Z` a `N-ZA-M` 
 Minúsculas : Mapa de `a-z` a `n-za-m`
@@ -344,3 +344,108 @@ The password is 5Te8Y4drgCRfCx8ugdwuEX8KFC6k2EUu
 ```
 ### Contraseña encontrada
 * 5Te8Y4drgCRfCx8ugdwuEX8KFC6k2EUu
+
+## Nivel 12-13
+### Tarea
+La contraseña para el siguiente nivel se almacena en el archivo data.txt , que es un volcado hexadecimal de un archivo que ha sido comprimido repetidamente. Para este nivel, puede ser útil crear un directorio bajo /tmp en el que pueda trabajar usando mkdir. Por ejemplo: mkdir /tmp/myname123. Luego copie el archivo de datos usando cp, y cámbiele el nombre usando mv
+### Solución 
+Esta tarea es una de las mas largas de bandit, es por eso que tendra partes donde se explicara lo que se hizo.
+### Parte 1 **Crear directorio y mover archivo**
+Ver el contenido del directorio de trabajo actual
+```
+bandido12@bandido:~$ ls 
+datos.txt
+```
+Ver los datos que están presentes en el archivo
+```
+bandit12@bandit:~$ head data.txt 
+00000000: 1f8b 0808 0650 b45e 0203 6461 7461 322e .....P.^..data2. 
+00000010: 6269 6e00 013d 02c2 fd42 5a68 3931 4159 bin..=...BZh91AY 
+00000020: 2653 598e 4f1c c800 001e 7fff fbf9 7fda &SY.O........... 
+0000000f6 fff6 f7 f730: 4f7cf730: 4f7cf7 abde 5e9f ..Ov...}?..}..^. 
+00000040: f3fe 9fbf f6f1 feee bfdf a3ff b001 3b1b ..............;. 
+00000050: 5481 a1a0 1ea0 1a34 d0d0 001a 68d3 4683 T......4....hF 
+00000060: 4680 0680 0034 1918 4c4d 190c 4000 0001 F....4..LM..@... 
+00000070: a000 c87a 81a3 464d a8d3 43c5 1068 0346 ...z..FM..C..hF 
+00000080: 8343 40d0 3400 0340 66a6 8068 0cd4 f500 .C@.4.. @f ..h....
+00000090: 69ea 6800 0f50 68f2 4d00 680d 06ca 0190 ih.Ph.Mh....
+```
+
+Mirando los datos, vemos que el archivo consta de datos hexadecimales. Tenemos que convertir estos datos hexadecimales a binarios para recuperar el archivo real. Podemos hacer uso del comando `xxd` que nos permite manipular datos hexadecimales. La `-r` bandera se usa para decirle a `xxd` que invierta la operación (hexadecimal a binario)
+
+Pero antes de hacer nada de esto, primero debemos crear un directorio de trabajo temporal en el directorio `/tmp`, ya que no tenemos permiso para crear nuevos archivos en la ubicación actual. Podemos hacer esto usando el comando `mkdir`. Para movernos al nuevo directorio podemos usar el comando `cd`.
+
+Otra solucion seria:
+
+Al leer las reglas dadas cuando ingresamos al servidor de bandit, también podemos usar `mktemp -d` para crear una carpeta con un nombre aleatorio, en lugar de usar `mkdir` y elegir un nombre. 
+```
+bandido12@bandido:~$ mkdir /tmp/random_dir
+bandido12@bandido:~$ cd /tmp/random_dir
+bandido12@bandido:/tmp/random_dir$
+```
+Ahora tenemos que mudarnos data.txta esta nueva ubicación. Podemos hacer esto usando el cpcomando. Y luego cambiamos el nombre del archivo para eliminar la .txtextensión, ya que sabemos que el archivo no es un archivo de texto.
+```
+bandit12@bandit:/tmp/random_dir$ cp ~/data.txt .
+bandit12@bandit:/tmp/random_dir$ ls 
+datos.txt
+bandit12@bandit:/tmp/random_dir$ mv data.txt datos
+bandit12@bandit:/tmp/random_dir$ ls 
+datos
+```
+### Parte 2 **Revertir el volcado hexadecimal del archivo**
+Ahora que los datos son un nuevo directorio, ahora podemos usar xxd para convertir los datos en su equivalente binario
+
+Mirando el archivo, vemos el formato de los datos. Como se dijo, es un volcado hexadecimal. Se parece a esto:
+```
+$ cat hexdump_data | head
+00000000: 1f8b 0808 0650 b45e 0203 6461 7461 322e  .....P.^..data2.
+00000010: 6269 6e00 013d 02c2 fd42 5a68 3931 4159  bin..=...BZh91AY
+00000020: 2653 598e 4f1c c800 001e 7fff fbf9 7fda  &SY.O...........
+00000030: 9e7f 4f76 9fcf fe7d 3fff f67d abde 5e9f  ..Ov...}?..}..^.
+00000040: f3fe 9fbf f6f1 feee bfdf a3ff b001 3b1b  ..............;.
+00000050: 5481 a1a0 1ea0 1a34 d0d0 001a 68d3 4683  T......4....h.F.
+00000060: 4680 0680 0034 1918 4c4d 190c 4000 0001  F....4..LM..@...
+00000070: a000 c87a 81a3 464d a8d3 43c5 1068 0346  ...z..FM..C..h.F
+00000080: 8343 40d0 3400 0340 66a6 8068 0cd4 f500  .C@.4..@f..h....
+00000090: 69ea 6800 0f50 68f2 4d00 680d 06ca 0190  i.h..Ph.M.h.....
+```
+
+Sin embargo, queremos operar con los datos reales. Por lo tanto, revertimos el hexdump y obtenemos los datos reales.
+
+```
+bandit12@bandit:/tmp/random_dir$ xxd -r datos > binario
+bandit12@bandit:/tmp/random_dir$ ls 
+datos binario
+bandit12@bandit:/tmp/random_dir$ file binario
+binario: gzip compressed data, was "data2.bin", last modified: Thu May  7 18:14:30 2020, max compression, from Unix
+
+bandit12@bandit:/tmp/random_dir$ cat binario
+P▒^data2.bin=▒▒BZh91AY&SY▒O▒▒▒▒ڞOv▒▒▒}?▒▒}▒▒^▒▒▒▒▒▒▒▒▒ߣ▒▒;▒▒▒▒4▒▒h▒F▒F▒▒4LM
+                                                                           @▒▒z▒▒FM▒▒C▒hF▒C@▒4@f▒▒h
+4hh▒=C%▒>X,▒k▒▒▒1▒▒GY▒▒hPh▒Mh
+▒J▒쌑Oϊ▒▒{RBp▒Qix▒Y▒Z!d▒▒j▒(▒搿ݳ▒▒/▒▒A▒#▒A▒▒0P▒▒v▒▒`▒"3▒
+
+                                          ▒▒d▒bX?▒▒z▒▒2▒▒<▒▒A ▒n}
+5(3A▒▒
+      wO▒R▒▒▒▒6▒XS{▒
+▒▒9?L▒P▒yB▒▒=z▒m?▒L▒Nt*▒7{qP▒▒̜▒%"▒w9▒qm4▒▒ N3▒6▒▒▒K▒▒H䋑[▒▒}!
+                                                             d▒▒3A4$▒M~▒\ɠJ▒C▒kUƦ\▒▒▒\▒FSN▒▒&=▒[▒▒q     \)▒$:▒▒H▒t&/▒(▒▒▒▒]▒▒BB9<s ▒▒h=
+```
+### Parte 2 **Descomprimir repetidamente**
+Podemos ver que el archivo se comprimió con qzip, por lo que podemos descomprimir los datos con el comando `gunzip`. Al intentar descomprimir un archivo gzip, es importante que el archivo tenga la extensión correcta. Gunzip es una abreviatura de comando `gzip -d`
+```
+```
+```
+bandit12@bandit:/tmp/random_dir$ mv binario binario.gz
+bandit12@bandit:/tmp/random_dir$ ls
+binario.gz datos
+bandit12@bandit:/tmp/random_dir$ gunzip binario.gz
+bandit12@bandit:/tmp/random_dir$ ls 
+datos binario
+```
+Sin embargo, los datos aún no están completamente descomprimidos, por lo que volvemos a mirar el comando `file`
+```
+bandit12@bandit:/tmp/random_dir$ file binario
+binario: bzip2 compressed data, block size = 900k
+```
+Se puede observar que el archivo ahora se encuentra en formato `bzip2`, entonces usamos el comando ``bzip2 -d`
