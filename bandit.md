@@ -499,7 +499,37 @@ bandit12@bandit:/tmp/random_dir$ bzip2 -d data6.bin ; ls
 bzip2: Can't guess original name for data6.bin -- using data6.bin.out
 binario.tar  binary  data  data5.bin  data6.bin.out  datos
 ```
+Volvemos a ver que archivo es con el comando `cat | head ` 
+```
+bandit12@bandit:/tmp/random_dir$ cat data6.bin.out | head
+data8.bin0000644000000000000000000000011713655050006011246 0ustar  rootrooP▒^data9.bin
+                                                                                      ▒HU(H,..▒/JQ▒,V▒▒ʪt▒t
+w▒▒▒KM▒▒(▒p.3.O2J4▒*▒▒▒▒▒▒1
+```
+Se puede observar que hay un archivo llamado `data8.bin`.
 
+Finalmente, tenemos que hacer una descompresión más gzip y obtenemos un archivo legible con la contraseña.
+```
+bandit12@bandit:/tmp/random_di  $ xxd data8.bin
+00000000: 1f8b 0808 0650 b45e 0203 6461 7461 392e  .....P.^..data9.
+bandit12@bandit:/tmp/random_di$ mv data8.bin data8.gz
+bandit12@bandit:/tmp/random_di$ gzip -d data8.gz
+bandit12@bandit:/tmp/random_di9$ ls
+binario.tar  binary  data  data5.bin  data6.bin.out  datos  data8  
+bandit12@bandit:/tmp/random_di$ cat data8
+The password is 8ZjyCRiBWFYkneahHwxCv3wb2a1ORpYL
+```
+## Solución cuando ya sabes los pasos a seguir
 
+```
+bandido12@bandido:~$ mkdir /tmp/pass123
+bandido12@bandido:~$ cp data.txt  /tmp/pass123
+bandido12@bandido:$cd /tmp/pass123
+bandido12@bandido:/tmp/pass123$ xxd -r data.txt > data
+bandido12@bandido:/tmp/pass123$ zcat data | bzcat | zcat | tar -xO | tar -xO | bzcat | tar -xO | zcat | cat
+8ZjyCRiBWFYkneahHwxCv3wb2a1ORpYL
+```
 
+### Contraseña encontrada
+* 8ZjyCRiBWFYkneahHwxCv3wb2a1ORpYL
 
