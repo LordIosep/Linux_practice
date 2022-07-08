@@ -441,6 +441,7 @@ bandit12@bandit:/tmp/random_dir$ gunzip binario.gz
 bandit12@bandit:/tmp/random_dir$ ls 
 datos binario
 ```
+### Parte 2.1 
 Sin embargo, los datos aún no están completamente descomprimidos, por lo que volvemos a mirar el comando `file`
 ```
 bandit12@bandit:/tmp/random_dir$ file binario
@@ -455,6 +456,7 @@ bandit12@bandit:/tmp/random_dir$ bzip2 -d binario.bz2
 bandit12@bandit:/tmp/random_dir$ ls
 binario  binary  data  datos
 ```
+### Parte 2.2
 Usando el comando `file` podemos ver que clase de archivo es
 
 ```
@@ -469,6 +471,7 @@ binario.tar datos
 bandit12@bandit:/tmp/random_dir$ tar -xf binario.tar ; ls
 binario.tar  data5.bin  datos
 ```
+### Parte 2.3
 Volvemos a analizar el archivo con el comando `file` y usando `cat binario.tar o binario.tar | head` ('head' para obtener solo las primeras 10 líneas), podemos ver la cadena 'data5.bin', que es un nombre de archivo.
 ```
 bandit12@bandit:/tmp/random_dir$ file data5.bin
@@ -481,6 +484,7 @@ data6.bin0000644000000000000000000000033613655050006011247 0ustar  rootrootBZh91
  ▒▒▒BȨ$fz&1*▒Ԇf▒▒zG▒g}▒+▒Q▒P(f}▒▒@Թ▒▒▒▒▒Tj▒1▒P▒EƮ▒▒ߨ▒▒▒@Ț▒▒=▒s▒▒*▒▒▒As*Y▒▒!$r▒▒5▒▒▒Es▒]▒▒B@ 0▒,
 ```
 Y se puede observar que hay otro archivo llamado `data6.bin`. Así que extraemos el archivo de nuevo.
+### Parte 2.4
 ```
 bandit12@bandit:/tmp/random_dir$ tar -xf data5.bin
 bandit12@bandit:/tmp/random_dir$ ls
@@ -488,11 +492,12 @@ binario.tar  binary  data  data5.bin  data6.bin  datos
 ```
 
 Volvemos a verificar que tipo de arhivo es, con el comando `file`. 
-
+### Parte 2.5
 ```
 bandit12@bandit:/tmp/random_dir$ file data6.bin
 data6.bin: bzip2 compressed data, block size = 900k
 ```
+### Parte 2.6
 Es un archivo bzip2 entonces usamos nuevamente el comando `bzip2 -d`
 ```
 bandit12@bandit:/tmp/random_dir$ bzip2 -d data6.bin ; ls
@@ -506,6 +511,7 @@ data8.bin0000644000000000000000000000011713655050006011246 0ustar  rootrooP▒^d
                                                                                       ▒HU(H,..▒/JQ▒,V▒▒ʪt▒t
 w▒▒▒KM▒▒(▒p.3.O2J4▒*▒▒▒▒▒▒1
 ```
+### Parte 2.6
 Se puede observar que hay un archivo llamado `data8.bin`.
 
 Finalmente, tenemos que hacer una descompresión más gzip y obtenemos un archivo legible con la contraseña.
@@ -532,4 +538,220 @@ bandido12@bandido:/tmp/pass123$ zcat data | bzcat | zcat | tar -xO | tar -xO | b
 
 ### Contraseña encontrada
 * 8ZjyCRiBWFYkneahHwxCv3wb2a1ORpYL
+
+## Nivel 13-14
+### Tarea
+La contraseña para el siguiente nivel se almacena en /etc/bandit_pass/bandit14 y solo puede leerla el usuario bandit14 . Para este nivel, no obtiene la siguiente contraseña, pero obtiene una clave SSH privada que puede usarse para iniciar sesión en el siguiente nivel.
+### Solución
+Inicié sesión en el servidor como bandit13 y encontré el archivo 'sshkey.private' en el directorio de inicio. 
+```
+bandit13@bandit:~$ ls 
+sshkey.privado
+```
+Tenemos una clave privada SSH. Podemos usar el comando SSH con la bandera `-i` para usar la clave privada.
+
+```
+bandit13@bandit:~$ ssh -i sshkey.private bandit14@localhost
+```
+Le saldra el siguiente mensaje : Are you sure you want to continue connecting (yes/no)? al cuel tiene que respoder con ´yes´, etnonces podra entrar desde ssh al bandit14 desde el bandit 13.
+
+Ahora a obtener la contraseña del usuario actual
+
+```
+bandido14@bandido:~$ gato /etc/bandit_pass/bandit14 
+4wcYUJFw0k0XLShlDzztnTBHiqxU3b3e
+```
+### Contraseña encontrada
+* 4wcYUJFw0k0XLShlDzztnTBHiqxU3b3e
+
+## Nivel 14-15
+### Tarea
+La contraseña para el siguiente nivel se puede recuperar enviando la contraseña del nivel actual al puerto 30000 en localhost.
+### Solución
+De la pregunta sabemos que hay un servicio que se ejecuta en el puerto 30,000. Podemos intentar conectarnos al servicio usando el comando `netcat`.
+
+Ayuda:`nc` es un alias para el comando`netcat` y se puede usar indistintamente.
+
+Primero, necesitamos encontrar la contraseña para bandit14. Los niveles anteriores indicaban que la contraseña está en /etc/bandit_pass/bandit14 
+```
+bandit14@bandit:~$ cat /etc/bandit_pass/bandit14
+4wcYUJFw0k0XLShlDzztnTBHiqxU3b3e
+```
+A continuación, debemos enviar la contraseña al puerto 30000 en localhost. Solía nc​​​​conectarme al puerto localhost 3000 y escribir la contraseña.
+```
+bandit14@bandit:~$ nc localhost 30000
+4wcYUJFw0k0XLShlDzztnTBHiqxU3b3e
+Correct!
+BfMYroe26WYalil77FoDi9qh59eK5xNr
+```
+
+### Contraseña encontrada
+* BfMYroe26WYalil77FoDi9qh59eK5xNr
+
+## Nivel 15-16
+### Tarea
+La contraseña para el siguiente nivel se puede recuperar enviando la contraseña del nivel actual al puerto 30001 en localhost usando encriptación SSL.
+### Solución
+Dado que la tarea indica que la contraseña se puede recuperar mediante el cifrado SSL, me conecto al servidor localhost con el cliente OpenSSL y envío la contraseña desde este nivel. Luego, el servidor devuelve la contraseña para el siguiente nivel.
+
+La forma más sencilla de lograr esto es usando el comando `openssl` junto con `s_client` el cual permite conectarse a los servicios en nuestra máquina usando SSL.
+```
+bandit15@bandit:~$ openssl s_client -connect localhost:30001
+CONNECTED(00000003)
+depth=0 CN = localhost
+verify error:num=18:self signed certificate
+verify return:1
+depth=0 CN = localhost
+verify return:1
+---
+Certificate chain
+ 0 s:/CN=localhost
+   i:/CN=localhost
+---
+.
+.
+.
+Start Time: 1615101060
+    Timeout   : 7200 (sec)
+    Verify return code: 18 (self signed certificate)
+    Extended master secret: yes
+---
+Password
+Wrong! Please enter the correct current password
+closed
+```
+Cuando proporcionamos la contraseña como "Password", aparece un error que dice una contraseña incorrecta
+
+Proporcionemos la contraseña correcta para ver si obtenemos la contraseña para el siguiente nivel. La contraseña para el nivel actual se puede encontrar en `/etc/bandit_pass/bandit15`
+
+```
+bandit15@bandit:~$ cat /etc/bandit_pass/bandit15
+BfMYroe26WYalil77FoDi9qh59eK5xNr
+bandit15@bandit:~$ openssl s_client -connect localhost:30001
+BfMYroe26WYalil77FoDi9qh59eK5xNr
+Correct!
+cluFn7wTiGryunymYOu4RcffSxQluehd
+```
+
+### Contraseña encontrada
+* cluFn7wTiGryunymYOu4RcffSxQluehd
+
+## Nivel 16-15
+### Tarea
+Las credenciales para el siguiente nivel se pueden recuperar enviando la contraseña del nivel actual a un puerto en localhost en el rango 31000 a 32000 . Primero averigüe cuáles de estos puertos tienen un servidor escuchando en ellos. Luego, averigüe cuáles de ellos hablan SSL y cuáles no. Solo hay 1 servidor que proporcionará las siguientes credenciales, los demás simplemente le enviarán lo que le envíe.
+### Solución
+Primero, necesitamos encontrar puertos abiertos entre 31000 y 32000 en localhost y verificar qué servicios se ejecutan en ellos. Utilicé el descubrimiento de servicios de nmap. (Esta tarea podría dividirse encontrando primero los puertos abiertos y luego haciendo el descubrimiento del servicio solo en estos puertos. Esto podría ser más rápido).
+
+```
+bandit16@bandit:~$ nmap -sV localhost -p 31000-32000
+
+Starting Nmap 7.40 ( https://nmap.org ) at 2021-06-12 16:17 CEST
+Nmap scan report for localhost (127.0.0.1)
+Host is up (0.00026s latency).
+Not shown: 996 closed ports
+PORT      STATE SERVICE     VERSION
+31046/tcp open  echo
+31518/tcp open  ssl/echo
+31691/tcp open  echo
+31790/tcp open  ssl/unknown
+31960/tcp open  echo
+```
+La bandera `-p` es importante. Esta bandera nos permite elegir qué puertos escanear. De forma predeterminada, Nmap escanea los 1000 puertos principales (no los primeros 1000 puertos). Use -p para escanear todos los puertos 65535. La bandera `-sV` nos permite hacer un análisis de detección de servicio/versión.
+
+Entonces, `nmap` nos dice que cinco puertos están abiertos. Solo dos puertos (31518 y 31790) usan SSL. Nmap también nos dice que el puerto 31518 solo ejecuta el servicio de echo. El puerto prometedor parece ser el puerto 31790, que ejecuta un servicio desconocido.
+
+Otra solucion tambien seria usar el indicador o bandera  `-T4`, se usa para aumentar la velocidad de la exploración.
+
+```
+bandit16@bandit:~$ nmap -sV -T4 -p 31000-32000 localhost
+Starting Nmap 7.40 ( https://nmap.org ) at 2021-03-07 09:04 CET
+Nmap scan report for localhost (127.0.0.1)
+Host is up (0.00030s latency).
+Not shown: 996 closed ports
+PORT      STATE SERVICE     VERSION
+31046/tcp open  echo
+31518/tcp open  ssl/echo
+31691/tcp open  echo
+31790/tcp open  ssl/unknown
+31960/tcp open  echo
+1 service unrecognized despite returning data. If you know the service/version, please submit the following fingerprint at https://nmap.org/cgi-bin/submit.cgi?new-service :
+SF-Port31790-TCP:V=7.40%T=SSL%I=7%D=3/7%Time=60448917%P=x86_64-pc-linux-gn
+SF:u%r(GenericLines,31,"Wrong!\x20Please\x20enter\x20the\x20correct\x20cur
+SF:rent\x20password\n")%r(GetRequest,31,"Wrong!\x20Please\x20enter\x20the\
+SF:x20correct\x20current\x20password\n")%r(HTTPOptions,31,"Wrong!\x20Pleas
+SF:e\x20enter\x20the\x20correct\x20current\x20password\n")%r(RTSPRequest,3
+SF:1,"Wrong!\x20Please\x20enter\x20the\x20correct\x20current\x20password\n
+SF:")%r(Help,31,"Wrong!\x20Please\x20enter\x20the\x20correct\x20current\x2
+SF:0password\n")%r(SSLSessionReq,31,"Wrong!\x20Please\x20enter\x20the\x20c
+SF:orrect\x20current\x20password\n")%r(TLSSessionReq,31,"Wrong!\x20Please\
+SF:x20enter\x20the\x20correct\x20current\x20password\n")%r(Kerberos,31,"Wr
+SF:ong!\x20Please\x20enter\x20the\x20correct\x20current\x20password\n")%r(
+SF:FourOhFourRequest,31,"Wrong!\x20Please\x20enter\x20the\x20correct\x20cu
+SF:rrent\x20password\n")%r(LPDString,31,"Wrong!\x20Please\x20enter\x20the\
+SF:x20correct\x20current\x20password\n")%r(LDAPSearchReq,31,"Wrong!\x20Ple
+SF:ase\x20enter\x20the\x20correct\x20current\x20password\n")%r(SIPOptions,
+SF:31,"Wrong!\x20Please\x20enter\x20the\x20correct\x20current\x20password\
+SF:n");
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 89.88 seconds
+```
+
+A partir de los resultados de nuestro escaneo, podemos ver que hay varios servicios que se ejecutan en ese rango, pero si observamos los resultados más de cerca, vemos que en el puerto 31790 hay un servicio que devuelve el mensaje "Ingrese la contraseña correcta". Como necesitamos encontrar un servicio para enviar contraseña, podemos concluir que este es el servicio que necesitamos.
+
+Sabemos que el servicio utiliza encriptación SSL. Entonces necesitamos usar el comando openssly s_clientpara conectarnos al puerto y pasar la contraseña del usuario actual
+
+```
+bandit16@bandit:~$ cat /etc/bandit_pass/bandit16
+cluFn7wTiGryunymYOu4RcffSxQluehd
+bandit16@bandit:~$ openssl s_client --connect localhost:31790
+CONNECTED(00000003)
+.
+.
+.
+---
+cluFn7wTiGryunymYOu4RcffSxQluehd
+Correct!
+-----BEGIN RSA PRIVATE KEY-----
+MIIEogIBAAKCAQEAvmOkuifmMg6HL2YPIOjon6iWfbp7c3jx34YkYWqUH57SUdyJ
+imZzeyGC0gtZPGujUSxiJSWI/oTqexh+cAMTSMlOJf7+BrJObArnxd9Y7YT2bRPQ
+Ja6Lzb558YW3FZl87ORiO+rW4LCDCNd2lUvLE/GL2GWyuKN0K5iCd5TbtJzEkQTu
+DSt2mcNn4rhAL+JFr56o4T6z8WWAW18BR6yGrMq7Q/kALHYW3OekePQAzL0VUYbW
+JGTi65CxbCnzc/w4+mqQyvmzpWtMAzJTzAzQxNbkR2MBGySxDLrjg0LWN6sK7wNX
+x0YVztz/zbIkPjfkU1jHS+9EbVNj+D1XFOJuaQIDAQABAoIBABagpxpM1aoLWfvD
+KHcj10nqcoBc4oE11aFYQwik7xfW+24pRNuDE6SFthOar69jp5RlLwD1NhPx3iBl
+J9nOM8OJ0VToum43UOS8YxF8WwhXriYGnc1sskbwpXOUDc9uX4+UESzH22P29ovd
+d8WErY0gPxun8pbJLmxkAtWNhpMvfe0050vk9TL5wqbu9AlbssgTcCXkMQnPw9nC
+YNN6DDP2lbcBrvgT9YCNL6C+ZKufD52yOQ9qOkwFTEQpjtF4uNtJom+asvlpmS8A
+vLY9r60wYSvmZhNqBUrj7lyCtXMIu1kkd4w7F77k+DjHoAXyxcUp1DGL51sOmama
++TOWWgECgYEA8JtPxP0GRJ+IQkX262jM3dEIkza8ky5moIwUqYdsx0NxHgRRhORT
+8c8hAuRBb2G82so8vUHk/fur85OEfc9TncnCY2crpoqsghifKLxrLgtT+qDpfZnx
+SatLdt8GfQ85yA7hnWWJ2MxF3NaeSDm75Lsm+tBbAiyc9P2jGRNtMSkCgYEAypHd
+HCctNi/FwjulhttFx/rHYKhLidZDFYeiE/v45bN4yFm8x7R/b0iE7KaszX+Exdvt
+SghaTdcG0Knyw1bpJVyusavPzpaJMjdJ6tcFhVAbAjm7enCIvGCSx+X3l5SiWg0A
+R57hJglezIiVjv3aGwHwvlZvtszK6zV6oXFAu0ECgYAbjo46T4hyP5tJi93V5HDi
+Ttiek7xRVxUl+iU7rWkGAXFpMLFteQEsRr7PJ/lemmEY5eTDAFMLy9FL2m9oQWCg
+R8VdwSk8r9FGLS+9aKcV5PI/WEKlwgXinB3OhYimtiG2Cg5JCqIZFHxD6MjEGOiu
+L8ktHMPvodBwNsSBULpG0QKBgBAplTfC1HOnWiMGOU3KPwYWt0O6CdTkmJOmL8Ni
+blh9elyZ9FsGxsgtRBXRsqXuz7wtsQAgLHxbdLq/ZJQ7YfzOKU4ZxEnabvXnvWkU
+YOdjHdSOoKvDQNWu6ucyLRAWFuISeXw9a/9p7ftpxm0TSgyvmfLF2MIAEwyzRqaM
+77pBAoGAMmjmIJdjp+Ez8duyn3ieo36yrttF5NSsJLAbxFpdlc1gvtGCWW+9Cq0b
+dxviW8+TFVEBl1O4f7HVm6EpTscdDxU+bCXWkfjuRb7Dy9GOtt9JPsX8MBTakzh3
+vBgsyi/sN3RqRBcGU40fOoZyfAMT8s1m/uYv52O6IgeuZ/ujbjY=
+-----END RSA PRIVATE KEY-----
+closed
+```
+
+No obtuvimos ninguna contraseña, pero obtuvimos una clave RSA que se puede usar con SSH para acceder al siguiente nivel. Necesitamos guardar la clave en un archivo para usarla con SSH. Como no tenemos permiso en el directorio de trabajo actual para crear un archivo. Creamos una carpeta en el `/tmp` directorio y trabajamos desde allí.
+
+```
+bandit16@bandit:~$ mkdir /tmp/random_sshkey
+bandit16@bandit:~$ cd /tmp/random_sshkey
+bandit16@bandit:/tmp/random_sshkey$ touch private.key
+bandit16@bandit:/tmp/random_sshkey$ vim private.key
+```
+
+Se uso el editor de texto vim para para guardar la clave en el archivo
+
+* Una vez que vim se abre, presione "i" para ingresar al modo de inserción
+* Luego use Ctrl + Shift + V para pegar la clave copiada
 
