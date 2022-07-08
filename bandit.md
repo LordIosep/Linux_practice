@@ -755,3 +755,199 @@ Se uso el editor de texto vim para para guardar la clave en el archivo
 * Una vez que vim se abre, presione "i" para ingresar al modo de inserción
 * Luego use Ctrl + Shift + V para pegar la clave copiada
 
+![](https://github.com/LordIosep/Linux_practice/blob/main/Imagenes/nivel15_16.png)
+
+* Pulse la tecla “Esc” para volver al modo normal
+* Luego escriba :wqpara guardar y salir del archivo.
+
+Cambie los permisos del archivo para que otros usuarios no puedan acceder al archivo
+
+```
+bandit16@bandit:/tmp/random_sshkey$ chmod 400 private.key
+bandit16@bandit:/tmp/random_sshkey$ ls -l
+total 4
+-r-------- 1 bandit16 root 1676 Mar  7 09:23 private.key
+```
+Ahora podemos usar el archivo clave con el sshcomando para acceder al siguiente nivel.
+
+```
+bandit16@bandit:/tmp/random_sshkey$ ssh -i private.key bandit17@localhost
+
+Linux bandit.otw.local 5.4.8 x86_64 GNU/Linux
+      ,----..            ,----,          .---.
+     /   /   \         ,/   .`|         /. ./|
+    /   .     :      ,`   .'  :     .--'.  ' ;
+   .   /   ;.  \   ;    ;     /    /__./ \ : |
+  .   ;   /  ` ; .'___,/    ,' .--'.  '   \' .
+  ;   |  ; \ ; | |    :     | /___/ \ |    ' '
+  |   :  | ; | ' ;    |.';  ; ;   \  \;      :
+  .   |  ' ' ' : `----'  |  |  \   ;  `      |
+  '   ;  \; /  |     '   :  ;   .   \    .\  ;
+   \   \  ',  /      |   |  '    \   \   ' \ |
+    ;   :    /       '   :  |     :   '  |--"
+     \   \ .'        ;   |.'       \   \ ;
+  www. `---` ver     '---' he       '---" ire.org
+Welcome to OverTheWire!
+.
+.
+.
+bandit17@bandit:~$
+bandit17@bandit:~$ cat /etc/bandit_pass/bandit17
+xLYVMN9WE5zQ5vHacb0sZEVqbrp7nBTn
+```
+
+### Contraseña encontrada
+* xLYVMN9WE5zQ5vHacb0sZEVqbrp7nBTn
+
+## Nivel 17-18
+### Tarea
+Hay 2 archivos en el directorio de inicio: `passwords.old` y `passwords.new`. La contraseña para el siguiente nivel está en `passwords.new` y es la única línea que se ha cambiado entre `passwords.old` y `passwords.new`.
+### Solución
+Ver los archivos que están presentes en el directorio de inicio.
+```
+bandit17@bandit:~$ ls
+passwords.new  passwords.old
+```
+
+Sabemos que ambos archivos difieren en una sola línea y esa línea consiste en la contraseña que requerimos. Podemos ver los cambios que se han hecho en los archivos usando el Sabemos que ambos archivos difieren en una sola línea y esa línea consiste en la contraseña que requerimos. Podemos ver los cambios que se han hecho en los archivos usando el comando `diff`.
+```
+bandit17@bandit:~$ diff passwords.old passwords.new
+42c42
+< w0Yfolrc5bwjS4qw5mq1nnQi6mF03bii
+---
+> kfBf3eYk5BPBRzwjqutbbfE887SVc5Yd
+```
+
+El signo `<` representa las líneas que se han eliminado y el signo `>` representa las líneas que se han agregado en su lugar
+
+La línea después del signo `>` es la contraseña para el siguiente nivel.
+
+### Solucion 2
+
+Esta solución alternativa se penso bansadose en el nivel 9,  sin embargo, no parece que `sort` mantenga el orden general de los archivos. Pero `grep` se puede utilizar para confirmar la contraseña correcta.
+
+```
+bandit17@bandit:~$ sort passwords.old passwords.new | uniq -u
+kfBf3eYk5BPBRzwjqutbbfE887SVc5Yd
+w0Yfolrc5bwjS4qw5mq1nnQi6mF03bii
+bandit17@bandit:~$ cat passwords.new | grep w0Yfolrc5bwjS4qw5mq1nnQi6mF03bii
+bandit17@bandit:~$ cat passwords.new | grep kfBf3eYk5BPBRzwjqutbbfE887SVc5Yd
+kfBf3eYk5BPBRzwjqutbbfE887SVc5Yd
+```
+
+### Contraseña encontrada
+* kfBf3eYk5BPBRzwjqutbbfE887SVc5Yd
+
+## Nivel 18-19
+### Tarea
+La contraseña para el siguiente nivel se almacena en un archivo `readme` en el directorio de inicio. Desafortunadamente, alguien ha modificado `.bashrc` para cerrar la sesión cuando inicia sesión con SSH.
+### Solución
+Al leer la pregunta, entendemos que no podemos iniciar sesión directamente ya que el shell predeterminado "Bash" se ha modificado para no permitir ningún inicio de sesión mediante SSH. 
+
+En lugar de iniciar sesión en la máquina con SSH, ejecutamos un comando a través de SSH. Primero, usamos `ls` para asegurarnos de que el archivo Léame esté en la carpeta y luego podemos usarlo `cat` para leerlo.
+
+```
+$ ssh bandit18@bandit.labs.overthewire.org -p 2220 ls         
+This is a OverTheWire game server. More information on http://www.overthewire.org/wargames
+
+bandit18@bandit.labs.overthewire.org's password: 
+readme
+
+$ ssh bandit18@bandit.labs.overthewire.org -p 2220 cat readme 
+This is a OverTheWire game server. More information on http://www.overthewire.org/wargames
+
+bandit18@bandit.labs.overthewire.org's password: 
+IueksS7Ubh8G3DCwVzrTd8rAVOwq3M5x
+```
+
+### Solución 2
+Como ya se menciono la shell predeterminada "Bash" se ha modificado para no permitir ningún inicio de sesión mediante SSH, es entoncees que necesitamos usar un shell que no sea bash para acceder al sistema.
+
+Los detalles de todos los shells que están disponibles en un sistema se almacenan en `/etc/shells`. Veamos el archivo en nuestro sistema para tener una idea de cuáles son los diferentes shells que podrían estar presentes en el objetivo (solo en Linux)
+```
+> cat /etc/shells
+# /etc/shells: valid login shells
+/bin/sh
+/bin/bash
+/usr/bin/bash
+/bin/rbash
+/usr/bin/rbash
+/bin/dash
+/usr/bin/dash
+/usr/bin/tmux
+/usr/bin/screen
+```
+
+Cada línea en el archivo representa un shell que está presente en el sistema
+
+Se puede usar el mismo método para ejecutar un comando con SSH pero usarlo `/bin/bash` como un comando para generar un shell bash o usar el `-t` indicador, lo que permite que se ejecute un 'pseudo-terminal' en la máquina de destino, de esta manera podemos ejecutar `\bin\sh`. Esto es especialmente útil si tenemos que ejecutar múltiples comandos porque no necesitamos repetir la declaración SSH y la contraseña.
+
+```
+$ ssh bandit18@bandit.labs.overthewire.org -p 2220 -t "/bin/sh"
+This is a OverTheWire game server. More information on http://www.overthewire.org/wargames
+bandit18@bandit.labs.overthewire.org's password: kfBf3eYk5BPBRzwjqutbbfE887SVc5Yd //Password encontrado en el anterior nivel
+$
+```
+
+Hemos logrado iniciar sesión con éxito usando el shell "sh"
+
+Encuentre la contraseña que está presente en el archivo readme
+
+```
+$ ls
+readme
+$ cat readme
+IueksS7Ubh8G3DCwVzrTd8rAVOwq3M5x
+```
+
+### Contraseña encontrada
+* IueksS7Ubh8G3DCwVzrTd8rAVOwq3M5x
+
+## Nivel 19-20
+### Tarea
+Para obtener acceso al siguiente nivel, debe usar el binario setuid en el directorio de inicio. Ejecutarlo sin argumentos para saber cómo usarlo. La contraseña para este nivel se puede encontrar en el lugar habitual (/etc/bandit_pass), después de haber utilizado el binario setuid.
+### Solución
+Nos han dicho que hay un archivo binario que está presente en el directorio de inicio que de alguna manera puede ayudarnos a acceder a la contraseña de bandit20. Echemos un vistazo al binario y verificamos quién es el propietario del binario setuid:
+
+```
+bandit19@bandit:~$ ls -la
+total 28
+drwxr-xr-x  2 root     root     4096 May  7  2020 .
+drwxr-xr-x 41 root     root     4096 May  7  2020 ..
+-rwsr-x---  1 bandit20 bandit19 7296 May  7  2020 bandit20-do
+-rw-r--r--  1 root     root      220 May 15  2017 .bash_logout
+-rw-r--r--  1 root     root     3526 May 15  2017 .bashrc
+-rw-r--r--  1 root     root      675 May 15  2017 .profile
+```
+
+En este caso, el propietario es badit20 y el grupo es bandit19, esto con '-rwsr-x—' significa que el usuario bandit19 puede ejecutar el binario, pero el binario se ejecuta como usuario bandit20.
+
+Ejecutar el binario dice que simplemente ejecuta otro comando como otro usuario (como ya se explicó, este usuario es bandit20). Esto significa que podemos acceder al archivo de contraseñas de los usuarios de bandit20, que solo puede leer el usuario bandit20.
+
+El archivo nos dice que nos permite ejecutar un comando como otro usuario. Veamos un ejemplo de ejecución de un comando como otro usuario usando el comando id
+```
+bandit19@bandit:~$ id
+uid=11019(bandit19) gid=11019(bandit19) groups=11019(bandit19)
+bandit19@bandit:~$ ./bandit20-do id
+uid=11019(bandit19) gid=11019(bandit19) euid=11020(bandit20) groups=11019(bandit19)
+```
+
+Observamos que cuando usamos el archivo binario, también se nos asigna el uid para bandit20, lo que significa que podemos ejecutar comandos como si fuéramos bandit20
+
+Ahora que sabemos que podemos ejecutar comandos como bandit20, usemos el binario para acceder a la contraseña del usuario bandit20
+
+```
+bandit19@bandit:~$ ./bandit20-do 
+Run a command as another user.
+  Example: ./bandit20-do id
+bandit19@bandit:~$ ./bandit20-do ls /etc/bandit_pass
+bandit0   bandit12  bandit16  bandit2   bandit23  bandit27  bandit30  bandit4  bandit8
+bandit1   bandit13  bandit17  bandit20  bandit24  bandit28  bandit31  bandit5  bandit9
+bandit10  bandit14  bandit18  bandit21  bandit25  bandit29  bandit32  bandit6
+bandit11  bandit15  bandit19  bandit22  bandit26  bandit3   bandit33  bandit7
+bandit19@bandit:~$ ./bandit20-do cat /etc/bandit_pass/bandit20
+GbKksEFF4yrVs6il55v6gwY5aVje5f0j
+```
+
+### Contraseña encontrada
+* GbKksEFF4yrVs6il55v6gwY5aVje5f0j
